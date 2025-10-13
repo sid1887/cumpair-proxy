@@ -8,7 +8,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Proxy credentials
-ARG PROXY_USER=sidraj@1887
+ARG PROXY_USER=sidraj
 ARG PROXY_PASS=sidraj@1887
 
 # Prepare log directory
