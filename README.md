@@ -1,30 +1,19 @@
-# cumpair-proxy-railway
+# cumpair-proxy (Render)
 
-TinyProxy container configured to listen on port 8080. Deploy to Railway (Docker) for an on-demand HTTP proxy.
+TinyProxy container (HTTP proxy) listening on port 8080 — ready for Render deployment.
 
-## Local build & test
-
-# Linux / macOS
+## Local test
 docker build -t cumpair-proxy --build-arg PROXY_USER=youruser --build-arg PROXY_PASS=yourpass .
 docker run -p 8080:8080 cumpair-proxy
-
-# Test from another terminal:
 curl -x http://youruser:yourpass@localhost:8080 https://api.ipify.org
 
-## Deploy to Railway (web UI)
-1. Push this repo to GitHub.
-2. Go to https://railway.app → New Project → Deploy from GitHub Repo → select this repo.
-3. Railway will detect the Dockerfile. In project settings, set Environment Variables:
-   - PROXY_USER (e.g. youruser)
-   - PROXY_PASS (e.g. yourpass)
-4. Deploy. Railway gives a domain like `yourapp.up.railway.app`.
-5. Test (replace domain and creds):
-   curl -x http://youruser:yourpass@yourapp.up.railway.app:8080 https://api.ipify.org
-
-## Start/Stop using Railway CLI
-Install Railway CLI, login, then:
-# Deploy (starts the instance)
-railway up
-
-# Remove the most recent deployment (stops and prevents hours from accruing)
-railway down
+## Deploy to Render
+1. Push repo to GitHub.
+2. Sign in to https://render.com and create a new Web Service (Docker).
+3. Connect the GitHub repo and select the branch.
+4. Set Environment Variables:
+   - PROXY_USER=youruser
+   - PROXY_PASS=yourpass
+5. Set the port to 8080 if prompted.
+6. Deploy and test:
+   curl -x http://youruser:yourpass@<your-service-host>:8080 https://api.ipify.org
