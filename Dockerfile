@@ -8,8 +8,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Proxy credentials
-ARG PROXY_USER=user
-ARG PROXY_PASS=pass
+ARG PROXY_USER=PROXY_USER
+ARG PROXY_PASS=sidraj@1887
 
 # Prepare log directory
 RUN mkdir -p /var/log/tinyproxy && chown -R nobody:nogroup /var/log/tinyproxy
