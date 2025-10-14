@@ -44,8 +44,15 @@ PidFile "/var/run/tinyproxy/tinyproxy.pid"
 # Performance tuning - Maximum number of clients
 MaxClients 200
 
-# Connection pool settings (removed obsolete directives)
+# Maximum requests per child process
 MaxRequestsPerChild 10000
+
+# Minimum and maximum spare servers
+MinSpareServers 5
+MaxSpareServers 20
+
+# Start servers
+StartServers 10
 
 # Allow connections from anywhere
 Allow 0.0.0.0/0
@@ -53,39 +60,13 @@ Allow 0.0.0.0/0
 # Disable Via header to avoid 400 errors on HTTPS
 DisableViaHeader Yes
 
-# Enable reverse proxy support
-ReverseOnly No
-
-# Enable upstream proxy support (if needed)
-# Upstream http 0.0.0.0:0
-
-# CRITICAL: Allow CONNECT method for HTTPS tunneling
-# Add all common HTTPS ports
+# Enable CONNECT method for HTTPS tunneling
 ConnectPort 443
 ConnectPort 563
-ConnectPort 873
 ConnectPort 8443
-ConnectPort 9443
 
-# Filter settings - disable filtering for maximum speed
+# Disable filtering
 FilterDefaultDeny No
-
-# Header modifications for better compatibility
-# Anonymous headers - comment out to send all headers
-# Anonymous "Host"
-# Anonymous "Authorization"
-
-# Reverse path (for advanced routing if needed)
-# ReversePath "/path/" "http://backend.com/"
-
-# Error pages (optional)
-# ErrorFile 404 "/usr/share/tinyproxy/404.html"
-# ErrorFile 400 "/usr/share/tinyproxy/400.html"
-# ErrorFile 503 "/usr/share/tinyproxy/503.html"
-
-# Statistics page (useful for monitoring)
-# StatFile "/usr/share/tinyproxy/stats.html"
-# StatHost "tinyproxy.stats"
 
 EOF
 
