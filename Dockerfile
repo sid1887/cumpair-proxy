@@ -21,13 +21,18 @@ Group nogroup\n\
 Port 8080\n\
 Timeout 600\n\
 Logfile "/var/log/tinyproxy/tinyproxy.log"\n\
+LogLevel Info\n\
 MaxClients 100\n\
 MinSpareServers 5\n\
 MaxSpareServers 20\n\
 StartServers 10\n\
 Allow 0.0.0.0/0\n\
+ViaProxyName "tinyproxy"\n\
+DisableViaHeader Yes\n\
 BasicAuth %s %s\n\
 ConnectPort 443\n\
+ConnectPort 563\n\
+ConnectPort 873\n\
 ConnectPort 8443\n\
 ' "${PROXY_USER}" "${PROXY_PASS}" > /etc/tinyproxy/tinyproxy.conf
 
