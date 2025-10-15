@@ -37,32 +37,55 @@ def test_http():
     """Test HTTP connection through proxy"""
     print_header("Testing HTTP Connection")
     try:
+        print(f"🔍 Attempting connection to http://httpbin.org/ip")
+        print(f"🔍 Using proxy: {PROXY_URL.replace(PROXY_PASS_ENCODED, '****')}")
         response = requests.get('http://httpbin.org/ip', proxies=proxies, timeout=30)
         response.raise_for_status()
         print(f"✅ HTTP Test PASSED")
         print(f"Response: {response.text}")
         return True
+    except requests.exceptions.ProxyError as e:
+        print(f"❌ HTTP Test FAILED - Proxy Error: {str(e)}")
+        print(f"💡 Check if proxy server is running and accessible")
+        return False
+    except requests.exceptions.HTTPError as e:
+        print(f"❌ HTTP Test FAILED - HTTP Error: {str(e)}")
+        print(f"💡 Status Code: {e.response.status_code if hasattr(e, 'response') else 'N/A'}")
+        return False
     except Exception as e:
         print(f"❌ HTTP Test FAILED: {str(e)}")
+        print(f"💡 Error Type: {type(e).__name__}")
         return False
 
 def test_https():
     """Test HTTPS connection through proxy"""
     print_header("Testing HTTPS Connection")
     try:
+        print(f"🔍 Attempting connection to https://httpbin.org/ip")
+        print(f"🔍 Using proxy: {PROXY_URL.replace(PROXY_PASS_ENCODED, '****')}")
         response = requests.get('https://httpbin.org/ip', proxies=proxies, timeout=30)
         response.raise_for_status()
         print(f"✅ HTTPS Test PASSED")
         print(f"Response: {response.text}")
         return True
+    except requests.exceptions.ProxyError as e:
+        print(f"❌ HTTPS Test FAILED - Proxy Error: {str(e)}")
+        print(f"💡 Check CONNECT method and ConnectPort settings")
+        return False
+    except requests.exceptions.HTTPError as e:
+        print(f"❌ HTTPS Test FAILED - HTTP Error: {str(e)}")
+        print(f"💡 Status Code: {e.response.status_code if hasattr(e, 'response') else 'N/A'}")
+        return False
     except Exception as e:
         print(f"❌ HTTPS Test FAILED: {str(e)}")
+        print(f"💡 Error Type: {type(e).__name__}")
         return False
 
 def test_google():
     """Test connection to Google (HTTPS)"""
     print_header("Testing Google (HTTPS)")
     try:
+        print(f"🔍 Attempting connection to https://www.google.com")
         response = requests.get('https://www.google.com', proxies=proxies, timeout=30)
         response.raise_for_status()
         print(f"✅ Google Test PASSED")
@@ -71,12 +94,14 @@ def test_google():
         return True
     except Exception as e:
         print(f"❌ Google Test FAILED: {str(e)}")
+        print(f"💡 Error Type: {type(e).__name__}")
         return False
 
 def test_api_ipify():
     """Test API endpoint (HTTPS)"""
     print_header("Testing API Endpoint (ipify)")
     try:
+        print(f"🔍 Attempting connection to https://api.ipify.org")
         response = requests.get('https://api.ipify.org?format=json', proxies=proxies, timeout=30)
         response.raise_for_status()
         print(f"✅ API Test PASSED")
@@ -84,6 +109,27 @@ def test_api_ipify():
         return True
     except Exception as e:
         print(f"❌ API Test FAILED: {str(e)}")
+        print(f"💡 Error Type: {type(e).__name__}")
+        return False
+
+def test_proxy_health():
+    """Test if proxy server is reachable"""
+    print_header("Testing Proxy Server Health")
+    try:
+        print(f"🔍 Checking if {PROXY_HOST}:{PROXY_PORT} is reachable")
+        import socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(5)
+        result = sock.connect_ex((PROXY_HOST, int(PROXY_PORT)))
+        sock.close()
+        if result == 0:
+            print(f"✅ Proxy server is reachable")
+            return True
+        else:
+            print(f"❌ Cannot reach proxy server")
+            return False
+    except Exception as e:
+        print(f"❌ Health check failed: {str(e)}")
         return False
 
 def main():
@@ -94,6 +140,9 @@ def main():
     print(f"Using credentials from: {'Environment Variables' if os.getenv('PROXY_USER') else 'Defaults'}")
     
     results = []
+    
+    # Run health check first
+    results.append(("Health Check", test_proxy_health()))
     
     # Run all tests
     results.append(("HTTP", test_http()))

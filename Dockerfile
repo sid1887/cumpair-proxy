@@ -70,13 +70,13 @@ FilterDefaultDeny No
 
 EOF
 
-# Add authentication using htpasswd
-RUN htpasswd -bc /etc/tinyproxy/.htpasswd "${PROXY_USER}" "${PROXY_PASS}" && \
-    chown nobody:nogroup /etc/tinyproxy/.htpasswd && \
-    chmod 640 /etc/tinyproxy/.htpasswd
+# Remove htpasswd creation since we're not using BasicAuth
+# BasicAuth causes issues with CONNECT method in Tinyproxy
 
-# Append BasicAuth to config
-RUN echo "BasicAuth ${PROXY_USER} ${PROXY_PASS}" >> /etc/tinyproxy/tinyproxy.conf
+# Note: Without BasicAuth, the proxy is open. For production, consider:
+# 1. Use IP whitelisting in Render
+# 2. Use a reverse proxy with authentication (nginx)
+# 3. Use VPN or private network
 
 # Expose the proxy port
 EXPOSE 8080
