@@ -21,12 +21,9 @@ PidFile "/var/run/tinyproxy/tinyproxy.pid"
 # Performance tuning
 MaxClients 200
 MaxRequestsPerChild 10000
-MinSpareServers 5
-MaxSpareServers 20
-StartServers 10
 
-# Allow connections from anywhere
-Allow 0.0.0.0/0
+# CRITICAL: Remove all Allow directives to allow all by default
+# Or use specific allow rules - but empty = allow all
 
 # Disable Via header to avoid 400 errors on HTTPS
 DisableViaHeader Yes
@@ -36,5 +33,5 @@ ConnectPort 443
 ConnectPort 563
 ConnectPort 8443
 
-# Disable filtering
+# Must be No to allow proxying
 FilterDefaultDeny No
