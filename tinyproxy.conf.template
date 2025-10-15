@@ -3,7 +3,7 @@ User nobody
 Group nogroup
 
 # Port will be substituted at container start
-Port ${PORT:-8080}
+Port ${PORT}
 
 # Bind to all interfaces
 Bind 0.0.0.0
