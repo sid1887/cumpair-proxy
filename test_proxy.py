@@ -8,20 +8,16 @@ import requests
 import sys
 import os
 from datetime import datetime
-from urllib.parse import quote
 
 # Proxy configuration
-# Read from environment variables (matching Render's setup) or use defaults
-PROXY_USER = os.getenv('PROXY_USER', 'sidraj')
-PROXY_PASS = os.getenv('PROXY_PASS', 'sidraj1887')
 PROXY_HOST = "cumpair-proxy.onrender.com"
-PROXY_PORT = "8080"
+# Set these based on auto_test.py results
+PROXY_PORT = os.getenv("PROXY_PORT", "443")
+PROXY_SCHEME = os.getenv("PROXY_SCHEME", "http")
 
-# URL-encode the password to handle special characters like @
-PROXY_PASS_ENCODED = quote(PROXY_PASS)
+PROXY_URL = f"{PROXY_SCHEME}://{PROXY_HOST}:{PROXY_PORT}"
 
-PROXY_URL = f"http://{PROXY_USER}:{PROXY_PASS_ENCODED}@{PROXY_HOST}:{PROXY_PORT}"
-
+# For requests library: use http:// URL for both so CONNECT method works
 proxies = {
     'http': PROXY_URL,
     'https': PROXY_URL
@@ -38,7 +34,7 @@ def test_http():
     print_header("Testing HTTP Connection")
     try:
         print(f"🔍 Attempting connection to http://httpbin.org/ip")
-        print(f"🔍 Using proxy: {PROXY_URL.replace(PROXY_PASS_ENCODED, '****')}")
+        print(f"🔍 Using proxy: {PROXY_URL}")
         response = requests.get('http://httpbin.org/ip', proxies=proxies, timeout=30)
         response.raise_for_status()
         print(f"✅ HTTP Test PASSED")
@@ -62,7 +58,7 @@ def test_https():
     print_header("Testing HTTPS Connection")
     try:
         print(f"🔍 Attempting connection to https://httpbin.org/ip")
-        print(f"🔍 Using proxy: {PROXY_URL.replace(PROXY_PASS_ENCODED, '****')}")
+        print(f"🔍 Using proxy: {PROXY_URL}")
         response = requests.get('https://httpbin.org/ip', proxies=proxies, timeout=30)
         response.raise_for_status()
         print(f"✅ HTTPS Test PASSED")
@@ -136,8 +132,9 @@ def main():
     """Run all tests"""
     print(f"\n🚀 Cumpair Proxy Server Test Suite")
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Proxy: http://{PROXY_USER}:****@{PROXY_HOST}:{PROXY_PORT}")
-    print(f"Using credentials from: {'Environment Variables' if os.getenv('PROXY_USER') else 'Defaults'}")
+    print(f"Proxy URL: {PROXY_URL}")
+    print(f"Proxy Scheme: {PROXY_SCHEME} | Port: {PROXY_PORT}")
+    print("⚠️  Note: Using HTTP proxy with CONNECT method for HTTPS")
     
     results = []
     

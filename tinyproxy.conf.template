@@ -1,0 +1,40 @@
+# User and Group
+User nobody
+Group nogroup
+
+# Port will be substituted at container start
+Port ${PORT:-8080}
+
+# Bind to all interfaces
+Bind 0.0.0.0
+
+# Timeout for connections (10 minutes)
+Timeout 600
+
+# Logging
+LogFile "/var/log/tinyproxy/tinyproxy.log"
+LogLevel Info
+
+# PID file
+PidFile "/var/run/tinyproxy/tinyproxy.pid"
+
+# Performance tuning
+MaxClients 200
+MaxRequestsPerChild 10000
+MinSpareServers 5
+MaxSpareServers 20
+StartServers 10
+
+# Allow connections from anywhere
+Allow 0.0.0.0/0
+
+# Disable Via header to avoid 400 errors on HTTPS
+DisableViaHeader Yes
+
+# Enable CONNECT method for HTTPS tunneling
+ConnectPort 443
+ConnectPort 563
+ConnectPort 8443
+
+# Disable filtering
+FilterDefaultDeny No
