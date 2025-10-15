@@ -13,7 +13,7 @@ RUN apt-get update && \
 
 # Proxy credentials
 ARG PROXY_USER=sidraj
-ARG PROXY_PASS=sidraj@1887
+ARG PROXY_PASS=sidraj1887
 
 # Create necessary directories with proper permissions
 RUN mkdir -p /var/log/tinyproxy /var/run/tinyproxy && \
