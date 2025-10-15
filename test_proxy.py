@@ -6,10 +6,21 @@ Tests both HTTP and HTTPS connectivity
 
 import requests
 import sys
+import os
 from datetime import datetime
+from urllib.parse import quote
 
 # Proxy configuration
-PROXY_URL = "http://sidraj:sidraj@1887@cumpair-proxy.onrender.com:8080"
+# Read from environment variables (matching Render's setup) or use defaults
+PROXY_USER = os.getenv('PROXY_USER', 'sidraj')
+PROXY_PASS = os.getenv('PROXY_PASS', 'sidraj1887')
+PROXY_HOST = "cumpair-proxy.onrender.com"
+PROXY_PORT = "8080"
+
+# URL-encode the password to handle special characters like @
+PROXY_PASS_ENCODED = quote(PROXY_PASS)
+
+PROXY_URL = f"http://{PROXY_USER}:{PROXY_PASS_ENCODED}@{PROXY_HOST}:{PROXY_PORT}"
 
 proxies = {
     'http': PROXY_URL,
@@ -79,7 +90,8 @@ def main():
     """Run all tests"""
     print(f"\n🚀 Cumpair Proxy Server Test Suite")
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Proxy: {PROXY_URL.replace('sidraj@1887', '****')}")
+    print(f"Proxy: http://{PROXY_USER}:****@{PROXY_HOST}:{PROXY_PORT}")
+    print(f"Using credentials from: {'Environment Variables' if os.getenv('PROXY_USER') else 'Defaults'}")
     
     results = []
     
